@@ -1,13 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Web3ReactProvider } from '@web3-react/core';
-import { ethers } from 'ethers';
-import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-
+import { Provider } from 'react-redux';
+import { Web3Provider } from './contexts/Web3Context';
 import { store } from './store';
 import { theme } from './theme';
-import { Web3Provider } from './contexts/Web3Context';
+import GlobalStyle from './styles/GlobalStyle';
 
 // Components
 import Navbar from './components/Navbar';
@@ -20,36 +18,29 @@ import Training from './pages/Training';
 import Profile from './pages/Profile';
 import ModelDetails from './pages/ModelDetails';
 import TrainingJobDetails from './pages/TrainingJobDetails';
-
-// Styles
-import GlobalStyle from './styles/GlobalStyle';
-
-function getLibrary(provider: any) {
-  return new ethers.providers.Web3Provider(provider);
-}
+import NotFound from './pages/NotFound';
 
 const App: React.FC = () => {
   return (
     <Provider store={store}>
-      <Web3ReactProvider getLibrary={getLibrary}>
+      <ThemeProvider theme={theme}>
         <Web3Provider>
-          <ThemeProvider theme={theme}>
+          <Router>
             <GlobalStyle />
-            <Router>
-              <Navbar />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/marketplace" element={<Marketplace />} />
-                <Route path="/training" element={<Training />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/model/:id" element={<ModelDetails />} />
-                <Route path="/training/:id" element={<TrainingJobDetails />} />
-              </Routes>
-              <Footer />
-            </Router>
-          </ThemeProvider>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/training" element={<Training />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/model/:id" element={<ModelDetails />} />
+              <Route path="/job/:id" element={<TrainingJobDetails />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Footer />
+          </Router>
         </Web3Provider>
-      </Web3ReactProvider>
+      </ThemeProvider>
     </Provider>
   );
 };
